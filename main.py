@@ -1,12 +1,22 @@
-# main.py
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, World!"}
+# Allow requests from your frontend's origin
+origins = [
+    "http://my-frontend-aws-demo-vue.s3-website-us-west-2.amazonaws.com",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 @app.get("/greet/{name}")
-def greet(name: str):
+async def greet(name: str):
     return {"message": f"Hello, {name}!"}
+
